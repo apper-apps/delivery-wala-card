@@ -63,8 +63,9 @@ const SchedulePage = () => {
       </motion.div>
       
       {/* Delivery Boys List */}
-      <DeliveryBoyList searchTerm={searchTerm} />
+<DeliveryBoyList searchTerm={searchTerm} />
     </div>
   )
+}
 
-export default SchedulePage
+export default SchedulePage;
