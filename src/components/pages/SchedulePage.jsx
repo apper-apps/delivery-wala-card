@@ -1,11 +1,14 @@
-import React from 'react'
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import ApperIcon from '@/components/ApperIcon'
-import Button from '@/components/atoms/Button'
-import DeliveryBoyList from '@/components/organisms/DeliveryBoyList'
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import ApperIcon from "@/components/ApperIcon";
+import DeliveryBoyList from "@/components/organisms/DeliveryBoyList";
+import Button from "@/components/atoms/Button";
+import SearchBar from "@/components/molecules/SearchBar";
 
 const SchedulePage = () => {
+  const [searchTerm, setSearchTerm] = useState('')
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Page Header */}
@@ -40,15 +43,28 @@ const SchedulePage = () => {
               <Button icon="CalendarDays" variant="secondary">
                 کیلنڈر ویو
               </Button>
-            </Link>
+</Link>
           </div>
         </div>
       </motion.div>
       
+      {/* Search Bar */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="glass-card rounded-2xl p-6 mb-8"
+      >
+        <SearchBar
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Delivery Boy Ka Naam Ya Phone Number Dhoondhein."
+        />
+      </motion.div>
+      
       {/* Delivery Boys List */}
-      <DeliveryBoyList />
+      <DeliveryBoyList searchTerm={searchTerm} />
     </div>
   )
-}
 
 export default SchedulePage

@@ -9,13 +9,15 @@ import Empty from '@/components/ui/Empty'
 import { deliveryBoyService } from '@/services/api/deliveryBoyService'
 import { getCurrentDay } from '@/utils/dateUtils'
 
-const DeliveryBoyList = () => {
+const DeliveryBoyList = ({ searchTerm: externalSearchTerm = '' }) => {
   const [deliveryBoys, setDeliveryBoys] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedDay, setSelectedDay] = useState('All')
   
+  // Use external search term if provided, otherwise use internal
+  const activeSearchTerm = externalSearchTerm || searchTerm
   const days = ["All", "Aitwar", "Somwar", "Mangal", "Budh", "Jumeraat", "Jumma", "Hafta"]
   const currentDay = getCurrentDay()
   
@@ -36,10 +38,10 @@ const DeliveryBoyList = () => {
     loadDeliveryBoys()
   }, [])
   
-  const filteredDeliveryBoys = deliveryBoys.filter(boy => {
-    const matchesSearch = boy.naam.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         boy.phoneNumber.includes(searchTerm) ||
-                         boy.assignedDay.toLowerCase().includes(searchTerm.toLowerCase())
+const filteredDeliveryBoys = deliveryBoys.filter(boy => {
+    const matchesSearch = boy.naam.toLowerCase().includes(activeSearchTerm.toLowerCase()) ||
+                         boy.phoneNumber.includes(activeSearchTerm) ||
+                         boy.assignedDay.toLowerCase().includes(activeSearchTerm.toLowerCase())
     
     const matchesDay = selectedDay === 'All' || boy.assignedDay === selectedDay
     
@@ -56,15 +58,17 @@ const DeliveryBoyList = () => {
   if (loading) return <Loading />
   if (error) return <Error message={error} onRetry={loadDeliveryBoys} />
   
-  return (
+return (
     <div className="space-y-6">
       {/* Search and Filter */}
       <div className="glass-card rounded-2xl p-6 space-y-4">
-        <SearchBar
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="نام، فون نمبر، یا دن سے تلاش کریں..."
-        />
+        {!externalSearchTerm && (
+          <SearchBar
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="نام، فون نمبر، یا دن سے تلاش کریں..."
+          />
+        )}
         
         <DaySelector
           selectedDay={selectedDay}
